@@ -28,10 +28,11 @@
       </div>
       <div class="hero__slideshow" role="img" aria-label="charity: water project slideshow">
         <div class="hero__slides">
-          <div class="hero__slide" style="--slide-image: url('slideshow1.jpeg');" aria-hidden="true"></div>
-          <div class="hero__slide" style="--slide-image: url('slideshow2.jpeg');" aria-hidden="true"></div>
-          <div class="hero__slide" style="--slide-image: url('slideshow3.jpeg');" aria-hidden="true"></div>
-          <div class="hero__slide" style="--slide-image: url('slideshow4.jpeg');" aria-hidden="true"></div>
+          <div class="hero__slide" style="background-image: url('slideshow1.jpeg');" aria-hidden="true"></div>
+          <div class="hero__slide" style="background-image: url('slideshow2.jpeg');" aria-hidden="true"></div>
+          <div class="hero__slide" style="background-image: url('slideshow3.jpeg');" aria-hidden="true"></div>
+          <div class="hero__slide" style="background-image: url('slideshow4.jpeg');" aria-hidden="true"></div>
+
         </div>
         <div class="hero__slide-progress" aria-hidden="true">
           <span></span>
@@ -65,20 +66,25 @@
     <section id="live" class="section container cards">
       <h2>Progress You Can See</h2>
       <div class="grid">
+        <!-- BEFORE -->
         <article class="card">
-          <img src="pic1.jpeg"/>
+          <img src="pic1.jpeg" alt="Hands pouring muddy water into a bowl from a small puddle on cracked earth" />
           <h3>Before · Contaminated Source</h3>
-          <p>Water taken from open ponds is murky and poses a risk of Disease & Fungus.</p>
+          <p>Water taken from open ponds is murky and poses a risk of waterborne disease.</p>
         </article>
+
+        <!-- DURING -->
         <article class="card">
-          <img src="pic3.jpeg"/>
-          <h3>During · First Flow</h3>
+          <img src="pic2.jpeg" alt="Two women walking with large blue water containers along a rural road" />
+          <h3>During · The Walk</h3>
           <p>Women and girls carry heavy containers for long distances, losing time and facing safety risks.</p>
         </article>
+
+        <!-- AFTER -->
         <article class="card">
-          <img src="pic2.jpeg"/>
-          <h3>After · The Walk</h3>
-          <p>Clean, reliable water; Attendance and health on rise.</p>
+          <img src="pic3.jpeg" alt="Clean water flowing from a pipe with bright droplets into a storage tank" />
+          <h3>After · First Flow</h3>
+          <p>Clean, reliable water; attendance and health on the rise.</p>
         </article>
       </div>
     </section>
@@ -106,6 +112,93 @@
     <small>2025 © Charity: Water — Design by Jeffrey Li</small>
   </footer>
   <script>
+    (function(){
+      const slideshow=document.querySelector('.hero__slideshow');
+      if(!slideshow)return;
+
+      const slides=Array.from(slideshow.querySelectorAll('.hero__slide'));
+      const progressBars=Array.from(slideshow.querySelectorAll('.hero__slide-progress span'));
+      if(!slides.length)return;
+
+      let activeIndex=0;
+      let autoplayTimer=null;
+      const AUTOPLAY_INTERVAL=6500;
+
+      const setActiveSlide=index=>{
+        activeIndex=(index+slides.length)%slides.length;
+
+        slides.forEach((slide,idx)=>{
+          const isActive=idx===activeIndex;
+          slide.classList.toggle('is-active',isActive);
+          slide.setAttribute('aria-hidden',(!isActive).toString());
+        });
+
+        progressBars.forEach((bar,idx)=>{
+          bar.classList.remove('is-active');
+          if(idx===activeIndex){
+            void bar.offsetWidth;
+            bar.classList.add('is-active');
+          }
+        });
+      };
+
+      const startAutoplay=()=>{
+        stopAutoplay();
+        autoplayTimer=window.setInterval(()=>{
+          setActiveSlide(activeIndex+1);
+        },AUTOPLAY_INTERVAL);
+      };
+
+      const stopAutoplay=()=>{
+        if(autoplayTimer){
+          window.clearInterval(autoplayTimer);
+          autoplayTimer=null;
+        }
+      };
+
+      setActiveSlide(0);
+      startAutoplay();
+
+      slideshow.addEventListener('pointerenter',()=>{
+        slideshow.classList.add('is-paused');
+        stopAutoplay();
+      });
+
+      slideshow.addEventListener('pointerleave',()=>{
+        slideshow.classList.remove('is-paused');
+        startAutoplay();
+      });
+
+      slideshow.addEventListener('focusin',()=>{
+        slideshow.classList.add('is-paused');
+        stopAutoplay();
+      });
+
+      slideshow.addEventListener('focusout',event=>{
+        if(!slideshow.contains(event.relatedTarget)){
+          slideshow.classList.remove('is-paused');
+          startAutoplay();
+        }
+      });
+
+      const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(entry.target!==slideshow)return;
+          if(entry.isIntersecting){
+            if(!autoplayTimer&&!slideshow.classList.contains('is-paused')){
+              startAutoplay();
+            }
+          }else{
+            stopAutoplay();
+          }
+        });
+      },{threshold:0.35});
+
+      observer.observe(slideshow);
+
+      window.addEventListener('pagehide',stopAutoplay);
+    })();
+
     (function(){
       const donateButton=document.querySelector('.donate-top');
       if(!donateButton)return;
