@@ -1,5 +1,5 @@
 :root{
-  --cw-yellow:#f5c400; /* 按你的色板替换 */
+  --cw-yellow:#f5c400; /* Color */
   --ink:#111; --ink-2:#2b2b2b; --bg:#fff; --muted:#666; --card:#f7f7f7;
 }
 
@@ -24,7 +24,11 @@ h2{font-size: clamp(22px,3vw,32px)} .sub{color:var(--muted);max-width:48ch}
 .card{background:var(--card);border-radius:14px;overflow:hidden}
 .card img{width:100%;height:180px;object-fit:cover}
 .trust ul{line-height:2}
-.cta-wrap{background:rgb(37,71,135);color:#fff;text-align:center}
+.cta-wrap{position:relative;color:#fff;text-align:center;overflow:hidden;padding:0;background:linear-gradient(135deg,rgb(37,71,135),rgb(143,216,211));}
+.cta-wrap .container{position:relative;z-index:1;padding:110px 0;}
+.cta-wrap h2{margin:0;font-size:clamp(28px,4vw,48px);text-shadow:0 8px 24px rgba(0,0,0,.35);}
+.water-scene{position:absolute;inset:0;pointer-events:none;}
+.water-scene canvas{width:100%;height:100%;display:block;filter:drop-shadow(0 12px 32px rgba(0,0,0,.45));}
 .footer{padding:40px 0;color:#777}
 
 @media (max-width: 900px){
