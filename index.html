@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>charity: water — Campus</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <div class="nav__brand">
+        <div class="logo-slot" title="charity: water campus logo">
+          <img src="logo2.jpg" alt="charity: water campus logo" />
+        </div>
+        <a class="logo" href="#">charity: water</a>
+      </div>
+      <a class="donate-top btn btn--donate" href="#donate">Donate</a>
+    </nav>
+    <div class="hero__inner container">
+      <div class="hero__content">
+        <h1>Donations you can see, water you can trust.</h1>
+        <p class="sub">Track real projects. Share results. Join or leave anytime.</p>
+        <div class="cta">
+          <a class="btn btn--primary" href="#donate" aria-label="Start Supporting clean water projects">Start Supporting</a>
+          <a class="btn btn--secondary" href="#live" aria-label="See a live project update">See a Live Project</a>
+        </div>
+      </div>
+      <div class="hero__slideshow" role="img" aria-label="charity: water project slideshow">
+        <div class="hero__slides">
+          <div class="hero__slide" style="--slide-image: url('slideshow1.jpeg');" aria-hidden="true"></div>
+          <div class="hero__slide" style="--slide-image: url('slideshow2.jpeg');" aria-hidden="true"></div>
+          <div class="hero__slide" style="--slide-image: url('slideshow3.jpeg');" aria-hidden="true"></div>
+          <div class="hero__slide" style="--slide-image: url('slideshow4.jpeg');" aria-hidden="true"></div>
+        </div>
+        <div class="hero__slide-progress" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="why" class="section container three">
+      <h2>Why Clean Water</h2>
+      <div class="grid">
+        <article><h3>Health</h3><p>Safe water prevents disease and protects families.</p></article>
+        <article><h3>Time</h3><p>Less time fetching water means more time for school and work.</p></article>
+        <article><h3>Education</h3><p>Girls’ attendance rises when water is close and clean.</p></article>
+      </div>
+    </section>
+
+    <section id="how" class="section container three">
+      <h2>How We Do</h2>
+      <div class="grid">
+        <article><h3>Join</h3><p>Start a flexible monthly pledge.</p></article>
+        <article><h3>Build</h3><p>Funds go to wells, filters and maintenance.</p></article>
+        <article><h3>See</h3><p>Get milestones, photos, and first-flow updates.</p></article>
+      </div>
+    </section>
+
+    <section id="live" class="section container cards">
+      <h2>Progress You Can See</h2>
+      <div class="grid">
+        <article class="card">
+          <img src="pic1.jpeg"/>
+          <h3>Before · Contaminated Source</h3>
+          <p>Water taken from open ponds is murky and poses a risk of Disease & Fungus.</p>
+        </article>
+        <article class="card">
+          <img src="pic3.jpeg"/>
+          <h3>During · First Flow</h3>
+          <p>Women and girls carry heavy containers for long distances, losing time and facing safety risks.</p>
+        </article>
+        <article class="card">
+          <img src="pic2.jpeg"/>
+          <h3>After · The Walk</h3>
+          <p>Clean, reliable water; Attendance and health on rise.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="trust" class="section container trust">
+      <h2>Transparency & Reports</h2>
+      <ul>
+        <li><a href="#" target="_blank" rel="noopener">Annual Impact Report</a></li>
+        <li><a href="#" target="_blank" rel="noopener">Independent Audit</a></li>
+        <li>University partners & student chapters</li>
+      </ul>
+    </section>
+
+    <section id="donate" class="section cta-wrap">
+      <div class="water-scene" aria-hidden="true">
+        <canvas id="water-canvas"></canvas>
+      </div>
+      <div class="container">
+        <h2>Let Water Always Delighting People</h2>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <small>2025 © Charity: Water — Design by Jeffrey Li</small>
+  </footer>
+  <script>
+    (function(){
+      const donateButton=document.querySelector('.donate-top');
+      if(!donateButton)return;
+
+      const colors=['#ee7737','#2663ab','#7ec65a','#f7b42c','#ffffff'];
+      let isCoolingDown=false;
+
+      const launchConfetti=()=>{
+        const layer=document.createElement('div');
+        layer.className='confetti-layer';
+        const pieces=90;
+        for(let i=0;i<pieces;i++){
+          const piece=document.createElement('span');
+          piece.className='confetti';
+          piece.style.setProperty('--confetti-delay',`${Math.random()*0.7}s`);
+          piece.style.setProperty('--confetti-spread',`${30+Math.random()*90}vw`);
+          piece.style.width=`${6+Math.random()*8}px`;
+          piece.style.height=`${14+Math.random()*12}px`;
+          piece.style.backgroundColor=colors[i%colors.length];
+          piece.style.animationDuration=`${2.6+Math.random()*0.9}s`;
+          piece.style.opacity='0';
+          layer.appendChild(piece);
+        }
+        document.body.appendChild(layer);
+        requestAnimationFrame(()=>layer.classList.add('active'));
+        setTimeout(()=>layer.classList.add('fade'),2600);
+        setTimeout(()=>layer.remove(),3500);
+      };
+
+      donateButton.addEventListener('click',()=>{
+        if(isCoolingDown)return;
+        isCoolingDown=true;
+        launchConfetti();
+        setTimeout(()=>{isCoolingDown=false;},4000);
+      });
+    })();
+
+    (function(){
+      const cta=document.querySelector('.cta-wrap');
+      const canvas=document.getElementById('water-canvas');
+      if(!cta||!canvas)return;
+      const ctx=canvas.getContext('2d');
+      if(!ctx)return;
+
+      let width=0,height=0;
+      let pixelRatio=1;
+      let wavePhase=0;
+      let currentLevel=0.35;
+      let targetLevel=0.35;
+      let droplet=null;
+      let splashParticles=[];
+      let ripples=[];
+      let waveOutline=[];
+      let dropletArmed=true;
+
+      const resize=()=>{
+        const ratio=window.devicePixelRatio||1;
+        pixelRatio=ratio;
+        width=cta.clientWidth;
+        height=cta.clientHeight;
+        canvas.width=width*ratio;
+        canvas.height=height*ratio;
+        canvas.style.width=width+"px";
+        canvas.style.height=height+"px";
+        ctx.setTransform(ratio,0,0,ratio,0,0);
+      };
+
+      const updateScrollTarget=()=>{
+        const scrollable=document.documentElement.scrollHeight-window.innerHeight;
+        const scrolled=window.scrollY;
+        const progress=scrollable>0?Math.min(Math.max(scrolled/scrollable,0),1):0;
+        targetLevel=0.32+progress*0.6;
+        if(progress>0.98 && dropletArmed){
+          spawnDroplet();
+          dropletArmed=false;
+        }
+        if(progress<0.92){
+          dropletArmed=true;
+        }
+      };
+
+      const spawnDroplet=()=>{
+        droplet={
+          x:width*0.5,
+          y:-40,
+          vy:1.8,
+          radius:10,
+          active:true
+        };
+      };
+
+      const spawnSplash=(impactY)=>{
+        const count=14;
+        for(let i=0;i<count;i++){
+          const angle=(Math.random()*Math.PI/2)-(Math.PI/4);
+          const speed=4.5+Math.random()*2.5;
+          const lifespan=60+Math.random()*20;
+          splashParticles.push({
+            x:width*0.5+(Math.random()*16-8),
+            y:impactY,
+            vx:Math.cos(angle)*speed,
+            vy:-Math.sin(angle)*speed*0.9,
+            life:lifespan,
+            maxLife:lifespan
+          });
+        }
+        ripples.push({
+          radius:8,
+          alpha:0.65,
+          lineWidth:5,
+          maxRadius:Math.max(width*0.45,220),
+          y:impactY
+        });
+      };
+
+      const drawWave=(surfaceY)=>{
+        const amplitude=Math.max(height*0.035,12);
+        const amplitude2=amplitude*0.55;
+        const frequency=(Math.PI*2)/Math.max(width,1);
+        const points=[];
+        points.push({x:0,y:surfaceY});
+        for(let x=0;x<=width;x+=4){
+          const y=surfaceY+
+            Math.sin(x*frequency+wavePhase)*amplitude+
+            Math.sin(x*frequency*0.5+wavePhase*1.6)*amplitude2;
+          points.push({x,y});
+        }
+        const last=points[points.length-1];
+        if(last.x!==width){
+          const y=surfaceY+
+            Math.sin(width*frequency+wavePhase)*amplitude+
+            Math.sin(width*frequency*0.5+wavePhase*1.6)*amplitude2;
+          points.push({x:width,y});
+        }
+        ctx.beginPath();
+        ctx.moveTo(0,height);
+        ctx.lineTo(points[0].x,points[0].y);
+        for(let i=1;i<points.length;i++){
+          ctx.lineTo(points[i].x,points[i].y);
+        }
+        ctx.lineTo(width,height);
+        ctx.closePath();
+        const grad=ctx.createLinearGradient(0,surfaceY,width,height);
+        grad.addColorStop(0,'rgba(37,71,135,0.95)');
+        grad.addColorStop(1,'rgba(143,216,211,0.95)');
+        ctx.fillStyle=grad;
+        ctx.fill();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0,height);
+        ctx.lineTo(points[0].x,points[0].y);
+        for(let i=1;i<points.length;i++){
+          ctx.lineTo(points[i].x,points[i].y);
+        }
+        ctx.lineTo(width,height);
+        ctx.closePath();
+        ctx.clip();
+        const crest=ctx.createLinearGradient(0,surfaceY-24,0,surfaceY+24);
+        crest.addColorStop(0,'rgba(255,255,255,0.4)');
+        crest.addColorStop(1,'rgba(255,255,255,0.05)');
+        ctx.fillStyle=crest;
+        ctx.fillRect(0,surfaceY-24,width,48);
+        ctx.restore();
+
+        waveOutline=points;
+      };
+
+      const drawRipples=()=>{
+        if(!ripples.length||!waveOutline.length)return;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0,height);
+        ctx.lineTo(waveOutline[0].x,waveOutline[0].y);
+        for(let i=1;i<waveOutline.length;i++){
+          ctx.lineTo(waveOutline[i].x,waveOutline[i].y);
+        }
+        ctx.lineTo(width,height);
+        ctx.closePath();
+        ctx.clip();
+        ripples.forEach(r=>{
+          ctx.globalAlpha=r.alpha;
+          ctx.lineWidth=r.lineWidth;
+          ctx.strokeStyle='rgba(214,244,255,0.9)';
+          ctx.beginPath();
+          ctx.arc(width*0.5,r.y,r.radius,0,Math.PI*2);
+          ctx.stroke();
+        });
+        ctx.restore();
+        ctx.globalAlpha=1;
+        ctx.lineWidth=1;
+      };
+
+      const drawDroplet=(surfaceY)=>{
+        if(!droplet||!droplet.active)return;
+        const dropGradient=ctx.createRadialGradient(
+          droplet.x,
+          droplet.y-droplet.radius*0.5,
+          droplet.radius*0.2,
+          droplet.x,
+          droplet.y,
+          droplet.radius*1.2
+        );
+        dropGradient.addColorStop(0,'rgba(255,255,255,0.95)');
+        dropGradient.addColorStop(0.5,'rgba(214,244,255,0.9)');
+        dropGradient.addColorStop(1,'rgba(150,210,240,0.75)');
+        ctx.fillStyle=dropGradient;
+        ctx.beginPath();
+        ctx.ellipse(droplet.x,droplet.y,droplet.radius*0.9,droplet.radius*1.25,0,0,Math.PI*2);
+        ctx.fill();
+      };
+
+      const drawSplashParticles=()=>{
+        if(!splashParticles.length)return;
+        ctx.fillStyle='rgba(214,244,255,0.8)';
+        splashParticles=splashParticles.filter(p=>p.life>0);
+        splashParticles.forEach(p=>{
+          const alpha=Math.max(p.life/p.maxLife,0);
+          ctx.globalAlpha=alpha;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,3.5,0,Math.PI*2);
+          ctx.fill();
+        });
+        ctx.globalAlpha=1;
+      };
+
+      const step=()=>{
+        wavePhase+=0.035;
+        currentLevel+= (targetLevel-currentLevel)*0.035;
+        currentLevel=Math.min(Math.max(currentLevel,0.05),0.94);
+        ctx.setTransform(pixelRatio,0,0,pixelRatio,0,0);
+        ctx.clearRect(0,0,width,height);
+        const surfaceY=height*(1-currentLevel);
+        drawWave(surfaceY);
+
+        if(droplet&&droplet.active){
+          droplet.vy+=0.55;
+          droplet.y+=droplet.vy;
+          if(droplet.y>=surfaceY-droplet.radius*0.6){
+            droplet.active=false;
+            droplet=null;
+            spawnSplash(surfaceY-4);
+          }
+        }
+
+         if(droplet&&droplet.active){
+          drawDroplet(surfaceY);
+        }
+
+        if(ripples.length){
+          ripples.forEach(r=>{
+            r.radius+=4.8;
+            r.alpha*=0.95;
+            r.lineWidth=Math.max(r.lineWidth*0.94,1.4);
+          });
+          drawRipples();
+          ripples=ripples.filter(r=>r.alpha>0.05 && r.radius<r.maxRadius);
+        }
+
+        if(splashParticles.length){
+          splashParticles.forEach(p=>{
+            p.vy+=0.3;
+            p.x+=p.vx;
+            p.y+=p.vy;
+            p.life-=1;
+          });
+          drawSplashParticles();
+        }
+
+        requestAnimationFrame(step);
+      };
+
+      resize();
+      updateScrollTarget();
+      step();
+      window.addEventListener('resize',()=>{
+        resize();
+        updateScrollTarget();
+      });
+      window.addEventListener('scroll',updateScrollTarget,{passive:true});
+    })();
+  </script>
+</body>
+</html>
