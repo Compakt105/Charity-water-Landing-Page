@@ -10,8 +10,11 @@
   <header class="hero">
     <div class="overlay"></div>
     <nav class="nav">
-      <a class="logo" href="#">charity: water</a>
-      <a class="donate-top btn btn--ghost" href="#donate">Donate</a>
+      <div class="nav__brand">
+        <div class="logo-slot" aria-hidden="true" title="Paste your logo here"><span>LOGO</span></div>
+        <a class="logo" href="#">charity: water</a>
+      </div>
+      <a class="donate-top btn btn--donate" href="#donate">Donate</a>
     </nav>
     <div class="hero__inner container">
       <h1>Donations you can see, water you can trust.</h1>
@@ -26,7 +29,7 @@
 
   <main>
     <section id="why" class="section container three">
-      <h2>Why Water</h2>
+      <h2>Why Clean Water</h2>
       <div class="grid">
         <article><h3>Health</h3><p>Safe water prevents disease and protects families.</p></article>
         <article><h3>Time</h3><p>Less time fetching water means more time for school and work.</p></article>
@@ -35,7 +38,7 @@
     </section>
 
     <section id="how" class="section container three">
-      <h2>How It Works</h2>
+      <h2>How We Do</h2>
       <div class="grid">
         <article><h3>Join</h3><p>Start a flexible monthly pledge.</p></article>
         <article><h3>Build</h3><p>Funds go to wells, filters and maintenance.</p></article>
@@ -87,6 +90,43 @@
     <small>2025 © Charity: Water — Design by Jeffrey Li</small>
   </footer>
   <script>
+    (function(){
+      const donateButton=document.querySelector('.donate-top');
+      if(!donateButton)return;
+
+      const colors=['#ee7737','#2663ab','#7ec65a','#f7b42c','#ffffff'];
+      let isCoolingDown=false;
+
+      const launchConfetti=()=>{
+        const layer=document.createElement('div');
+        layer.className='confetti-layer';
+        const pieces=90;
+        for(let i=0;i<pieces;i++){
+          const piece=document.createElement('span');
+          piece.className='confetti';
+          piece.style.setProperty('--confetti-delay',`${Math.random()*0.7}s`);
+          piece.style.setProperty('--confetti-spread',`${30+Math.random()*90}vw`);
+          piece.style.width=`${6+Math.random()*8}px`;
+          piece.style.height=`${14+Math.random()*12}px`;
+          piece.style.backgroundColor=colors[i%colors.length];
+          piece.style.animationDuration=`${2.6+Math.random()*0.9}s`;
+          piece.style.opacity='0';
+          layer.appendChild(piece);
+        }
+        document.body.appendChild(layer);
+        requestAnimationFrame(()=>layer.classList.add('active'));
+        setTimeout(()=>layer.classList.add('fade'),2600);
+        setTimeout(()=>layer.remove(),3500);
+      };
+
+      donateButton.addEventListener('click',()=>{
+        if(isCoolingDown)return;
+        isCoolingDown=true;
+        launchConfetti();
+        setTimeout(()=>{isCoolingDown=false;},4000);
+      });
+    })();
+
     (function(){
       const cta=document.querySelector('.cta-wrap');
       const canvas=document.getElementById('water-canvas');
