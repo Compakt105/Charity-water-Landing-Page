@@ -13,7 +13,7 @@ h2{font-size: clamp(22px,3vw,32px)} .sub{color:var(--muted);max-width:48ch}
 .btn--secondary{border:2px solid #ccc;color:var(--ink)}
 .btn:hover{transform:translateY(-1px)} .cta{display:flex;gap:12px;flex-wrap:wrap}
 
-.hero{position:relative;min-height:72vh;display:flex;flex-direction:column;justify-content:flex-start;background:url('img/hero.jpg') center/cover no-repeat;color:#fff}
+.hero{position:relative;min-height:72vh;display:flex;flex-direction:column;justify-content:flex-start;background:linear-gradient(135deg,#25509a,#8fd8d3);color:#fff}
 .hero .overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.10))}
 .nav{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:16px 24px}
 .logo-slot{width:56px;height:56px;border-radius:18px;overflow:hidden;border:2px solid rgba(0,0,0,.08);background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(15,23,42,.12);transition:transform .3s ease,box-shadow .3s ease}
